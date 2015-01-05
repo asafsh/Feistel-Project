@@ -1,19 +1,12 @@
+package Feistel;
 import java.util.ArrayList;
 
 public class FeistelFunction {
 	
-	final private int ROUND_NUMBER = 0;
-	final private int BLOCK_SIZE = 64;
-	final private int KEY_SIZE = 56;
-	private int VI = 0;
+	final int ROUND_NUMBER = 0;
+	final int BLOCK_SIZE = 64;
+	final int KEY_SIZE = 56;
 	
-	// Update the VI
-	private void viUpdate() {
-		if (VI == 0) {
-			VI = 1;
-		} else 
-			VI = 0;
-	}
 	//neue Funktionen für Feistel
 	//public ArrayList <byte[]> encodeFeistel(String plaintext);
 	//public String decodeFeistel(ArrayList <byte[]>);      
