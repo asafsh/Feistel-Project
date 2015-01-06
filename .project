@@ -16,9 +16,9 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>CbcBlockCipher.java</name>
+			<name>src/Feistel/CbcBlockCipher.java</name>
 			<type>1</type>
-			<locationURI>PROJECT_LOC/src/CbcBlockCipher.java</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/CbcBlockCipher.java</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
