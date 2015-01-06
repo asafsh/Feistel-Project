@@ -4,22 +4,23 @@ package Feistel;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 
-public class SubkeyGeneration {
+public abstract class SubkeyGeneration {
 
-	private byte[] key = new byte[FeistelFunction.KEY_SIZE/8];
+	private static byte[] key = new byte[FeistelFunction.KEY_SIZE/8];
 	private static byte[] key_permuted = new byte[FeistelFunction.KEY_SIZE/8];
 	private static byte[] C = new byte[(FeistelFunction.KEY_SIZE/8) / 2];
 	private static byte[] D = new byte[(FeistelFunction.KEY_SIZE/8) / 2];
 	private static int[] rotate_schedule = new int[] {1, 1, 2, 2, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1, 1}; 
-	public void SubKeyGeneration() {
+	public static void intKey() {
 		keyReader(); // Read the key from the file and create the permuted key.
 		makeCandD(); // Create the first C and D parts.
 	}
 	// Read the key from the file into the program.
-	private void keyReader() {
-			File file_name = new File("C:\\Users\\Asaf Shahar\\Documents\\GitHub\\Feistel-Project\\k.txt");
+	private static void keyReader() {
+			File file_name = new File("./k.txt");
 			FileInputStream stream;
 			try {
 				stream = new FileInputStream(file_name);
@@ -60,7 +61,7 @@ public class SubkeyGeneration {
 	}
 	**/
 	// Create the first C and D parts of the key.
-	private void makeCandD() {
+	private static void makeCandD() {
 		// Split the key to 2 parts - C and  D.
 		for (int i=0; i < ((FeistelFunction.KEY_SIZE/8)/2); i++) {
 			C[i] = key_permuted[i];
@@ -79,7 +80,7 @@ public class SubkeyGeneration {
 	      return res;
 	   }
 	
-	private byte[] permute(byte[] arr1, byte[] arr2) {
+	private static byte[] permute(byte[] arr1, byte[] arr2) {
 		// The array show the chosen bits for the key.
 		int[] permuted_choice = new int[] {14, 17, 11, 24, 1, 5, 3, 28,
 										   15, 6, 21, 10, 23, 19, 12, 4,
@@ -102,7 +103,7 @@ public class SubkeyGeneration {
 	}
 	
 	// Make key for the current round from C and D.
-	public byte[] makeKey(int currentRound) {
+	public static byte[] makeKey(int currentRound) {
 		C = rotateLeft(C,rotate_schedule[currentRound-1]);
 		D = rotateLeft(D,rotate_schedule[currentRound-1]);
 		return permute(C, D);
@@ -122,7 +123,7 @@ public class SubkeyGeneration {
 	}	
 	**/
 	
-	private static int getBit(byte[] data, int pos) {
+	public static int getBit(byte[] data, int pos) {
 	      int posByte = pos/8; 
 	      int posBit = pos%8;
 	      byte valByte = data[posByte];
@@ -130,7 +131,7 @@ public class SubkeyGeneration {
 	      return valInt;
 	   }
 	
-	private static void setBit(byte[] data, int pos, int val) {
+	public static void setBit(byte[] data, int pos, int val) {
 	      int posByte = pos/8; 
 	      int posBit = pos%8;
 	      byte oldByte = data[posByte];
