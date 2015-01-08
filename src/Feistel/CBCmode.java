@@ -10,12 +10,14 @@ import org.apache.commons.codec.binary.Base64;
 
 public class CBCmode {
 	
-	private byte[] iv = new byte[FeistelFunction.BLOCK_SIZE];
-    private byte[] plaintext;
+	private static byte[] iv = new byte[(FeistelFunction.BLOCK_SIZE/4)/2];
+    private static byte[] plaintext;
     private byte[] ciphertext;
 
-    public void CBC() {
-    	readFiles(); // Read the plaintext and ciphertext files.
+    public static void CBCstart() {
+    	//readFiles(); // Read the plaintext and ciphertext files.
+    	String text = "thigfedlourhgftg";
+    	plaintext = text.getBytes();
     	encrypt();
     	
     }
@@ -43,13 +45,13 @@ public class CBCmode {
     /// Set the Initialization Vector.
     public void setIv() { 
     	// Set the VI to be 0101.... at the size of the block. 
-    	for (int i = 0; i < (FeistelFunction.BLOCK_SIZE); i++) { 
+    	for (int i = 0; i < (FeistelFunction.BLOCK_SIZE/4)/2; i++) { 
     		iv[i] = (byte) (i % 2); 
     	} 
     } 
     
     // Encrypt the given text.
-    public void encrypt() {
+    public static void encrypt() {
     	try {
     		// Create the file to print the result in.
 			FileOutputStream out = new FileOutputStream("ciphertext-result.txt");

@@ -11,16 +11,19 @@ public abstract class SubkeyGeneration {
 
 	private static byte[] key = new byte[FeistelFunction.KEY_SIZE/8];
 	private static byte[] key_permuted = new byte[FeistelFunction.KEY_SIZE/8];
-	private static byte[] C = new byte[(FeistelFunction.KEY_SIZE/8) / 2];
-	private static byte[] D = new byte[(FeistelFunction.KEY_SIZE/8) / 2];
+	private static byte[] C = new byte[(key_permuted.length / 2)];
+	private static byte[] D = new byte[(key_permuted.length / 2)];
 	private static int[] rotate_schedule = new int[] {1, 1, 2, 2, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1, 1}; 
-	public static void intKey() {
+	public static void initializeKey() {
 		keyReader(); // Read the key from the file and create the permuted key.
 		makeCandD(); // Create the first C and D parts.
 	}
 	// Read the key from the file into the program.
 	private static void keyReader() {
-			File file_name = new File("./k.txt");
+		String test = "thisiskey";	
+		key_permuted = test.getBytes();
+		/**
+			File file_name = new File("asaf.txt");
 			FileInputStream stream;
 			try {
 				stream = new FileInputStream(file_name);
@@ -34,6 +37,7 @@ public abstract class SubkeyGeneration {
 				System.out.println("Problome reading the \"k.txt\" file.");
 				System.exit(1);
 			}
+		**/	
 	}
 	/**
 	// Create a permuted item.
@@ -63,19 +67,17 @@ public abstract class SubkeyGeneration {
 	// Create the first C and D parts of the key.
 	private static void makeCandD() {
 		// Split the key to 2 parts - C and  D.
-		for (int i=0; i < ((FeistelFunction.KEY_SIZE/8)/2); i++) {
-			C[i] = key_permuted[i];
-			D[i] = key_permuted[((FeistelFunction.KEY_SIZE/8)/2) + i];
-		}
+		C = FeistelFunction.getHalf(key_permuted, 0, (key_permuted.length/2) -1);
+		D = FeistelFunction.getHalf(key_permuted, key_permuted.length/2, key_permuted.length-1);
 	}
 	
 	// Rotate left the given array.
-	private static byte[] rotateLeft(byte[] arr, int num) {
-	      int length = (arr.length-1)/8 + 1;
-	      byte[] res = new byte[length];
-	      for (int i=0; i<length; i++) {
-	         int val = getBit(arr,(i+num)%length);
-	         setBit(res,i,val);
+	public static byte[] rotateLeft(byte[] arr, int num) {
+		//int length = (arr.length-1)/8 + 1;
+	      byte[] res = new byte[arr.length];
+	      for (int i=0; i<arr.length; i++) {
+	         int val = getBit(arr,(i+num)%arr.length);
+	         setBit(res,i,val);	
 	      }
 	      return res;
 	   }
@@ -88,16 +90,17 @@ public abstract class SubkeyGeneration {
 										   41, 52, 31, 37, 47, 55, 30, 40,
 										   51, 45, 33, 48, 44, 49, 39, 56,
 										   34, 53, 46, 42, 50, 36, 29, 32};
-		byte[] full_arr = new byte[56];
+		byte[] full_arr = new byte[14];
 		// Combine the given arrays into 1 array.
-		for (int i=0; i < 56; i++) {
+		for (int i=0; i < arr1.length; i++) {
 			full_arr[i] = arr1[i];
-			full_arr[i+ 23] = arr2[i];
+			full_arr[i + (arr1.length -1)] = arr2[i];
 		}
 		// Select the return bits based on the permuted choice.
-		byte[] res_arr = new byte[24];
-		for (int i=0; i < permuted_choice.length; i++) {
-			res_arr[i] = full_arr[permuted_choice[i]-1];
+		byte[] res_arr = new byte[12];
+		for (int i=0; i < 12; i++) {
+			/// CHECK THIs!!! ???? ////
+			res_arr[i] = full_arr[(Math.round(permuted_choice[i]/4))];//full_arr[(permuted_choice[i])-1];
 		}
 		return res_arr;
 	}
